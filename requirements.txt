@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+python-multipart
+scapy
+netaddr
+mac-vendor-lookup
+rich
+ipwhois
+requests
+getmac
+python-dotenv
+python-json-logger
