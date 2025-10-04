@@ -1,0 +1,137 @@
+version: "3.9"
+
+services:
+  # -------------------
+  # 🏭 OT SIDE
+  # -------------------
+  plc1:
+    image: oitc/modbus-server
+    platform: linux/amd64
+    container_name: plc1
+    hostname: plc1-PLC-01
+    networks:
+      ot_lab_ot_net:
+        ipv4_address: 172.20.0.21
+    ports:
+      - "502:502"
+    environment:
+      - DEVICE_CNAME=PLC-01
+      - DEVICE_TYPE=OT
+    labels:
+      ui.display_name: "PLC-01 (Modbus)"
+    restart: always
+
+  opcua1:
+    image: mcr.microsoft.com/iotedge/opc-plc
+    container_name: opcua1
+    hostname: opcua1-OPC-01
+    networks:
+      ot_lab_ot_net:
+        ipv4_address: 172.20.0.22
+    ports:
+      - "4840:4840"
+    environment:
+      - DEVICE_CNAME=OPC-PLC-01
+      - DEVICE_TYPE=OT
+    labels:
+      ui.display_name: "OPC-UA PLC 01"
+    restart: always
+
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    hostname: mqtt-broker
+    networks:
+      ot_lab_ot_net:
+        ipv4_address: 172.20.0.23
+    ports:
+      - "1883:1883"
+    environment:
+      - DEVICE_CNAME=MQTT-BROKER
+      - DEVICE_TYPE=OT
+    labels:
+      ui.display_name: "MQTT Broker"
+    restart: always
+
+  hmi:
+    image: nginx:alpine
+    container_name: hmi
+    hostname: hmi-panel
+    networks:
+      ot_lab_ot_net:
+        ipv4_address: 172.20.0.24
+    ports:
+      - "8085:80"
+    environment:
+      - DEVICE_CNAME=HMI-PANEL
+      - DEVICE_TYPE=OT
+    labels:
+      ui.display_name: "HMI Panel (Operator Interface)"
+    restart: always
+
+  # -------------------
+  # 🖥️ IT SIDE
+  # -------------------
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    hostname: it-webserver
+    networks:
+      ot_lab_ot_net:
+        ipv4_address: 172.20.0.31
+    ports:
+      - "8081:80"
+    environment:
+      - DEVICE_CNAME=IT-WEB-01
+      - DEVICE_TYPE=IT
+    labels:
+      ui.display_name: "Web Server (IT)"
+    restart: always
+
+  database:
+    image: mysql:5.7
+    platform: linux/amd64
+    container_name: database
+    hostname: it-database
+    networks:
+      ot_lab_ot_net:
+        ipv4_address: 172.20.0.32
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - DEVICE_CNAME=IT-DB-01
+      - DEVICE_TYPE=IT
+    labels:
+      ui.display_name: "Database Server (MySQL)"
+    restart: always
+
+  # -------------------
+  # ✅ FastAPI BACKEND
+  # -------------------
+  fastapi-backend:
+    build:
+      context: . # current directory with Dockerfile
+    container_name: fastapi-backend
+    hostname: fastapi
+    networks:
+      ot_lab_ot_net:
+        ipv4_address: 172.20.0.50
+    ports:
+      - "8000:8000"      # map container port to host
+    environment:
+      - DEVICE_CNAME=FASTAPI
+      - DEVICE_TYPE=IT
+    restart: always
+    # --- ADD THE FOLLOWING LINES ---
+    user: root
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+networks:
+  ot_lab_ot_net:
+    name: ot_lab_ot_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
