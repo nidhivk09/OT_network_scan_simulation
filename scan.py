@@ -83,7 +83,7 @@ class AdvancedITOTScanner:
             return "Unknown"
 
     def advanced_arp_scan(self, subnet):
-        # (This is your original ARP scan method, unchanged)
+        
         hosts = []
         try:
             ans, unans = sr1(ARP(pdst=subnet), timeout=5, verbose=0, multi=True)
@@ -97,7 +97,7 @@ class AdvancedITOTScanner:
         return hosts
 
     def advanced_port_scan(self, ip, ports, timeout=2):
-        # (This is your original port scan method, unchanged)
+        
         open_ports = []
 
         def scan_port(port):
