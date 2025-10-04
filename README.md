@@ -42,7 +42,7 @@ You must have **Docker** and **Docker Compose** installed on your system.
     ```
     The FastAPI server will be available at `http://localhost:8000`.
 
-4. ** Optionally run requirements.txt:**
+4. **Optionally run requirements.txt:**
    ```bash
    pip install -r requirements.txt
    ```
