@@ -10,3 +10,8 @@ requests
 getmac
 python-dotenv
 python-json-logger
+pymodbus
+opcua
+paho-mqtt
+python-nmap
+asyncua
