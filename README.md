@@ -2,7 +2,7 @@
 
 This project provides a powerful IT/OT (Information Technology / Operational Technology) network security scanner complete with a FastAPI backend and a fully containerized, simulated industrial lab environment using Docker Compose.
 
-[cite_start]The scanner is designed to perform network discovery, identify devices, and distinguish between standard IT assets and critical OT/ICS (Industrial Control System) assets like PLCs, HMIs, and protocol gateways.
+The scanner is designed to perform network discovery, identify devices, and distinguish between standard IT assets and critical OT/ICS (Industrial Control System) assets like PLCs, HMIs, and protocol gateways.
 
 
 
@@ -41,6 +41,11 @@ You must have **Docker** and **Docker Compose** installed on your system.
     docker-compose ps
     ```
     The FastAPI server will be available at `http://localhost:8000`.
+
+4. ** Optionally run requirements.txt:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ---
 
